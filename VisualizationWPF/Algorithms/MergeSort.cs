@@ -1,9 +1,4 @@
-﻿using VisualizationWPF;
-using System.Threading.Tasks;
-
-
-
-namespace VisualizationWPF.Algorithms
+﻿namespace VisualizationWPF.Algorithms
 {
     public class MergeSort : ISortAlgorithm
     {
