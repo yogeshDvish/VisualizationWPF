@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using VisualizationWPF.Algorithms;
 using NAudio.Wave;
+using VisualizationWPF.Algorithms.PathFinding;
 
 namespace VisualizationWPF
 {
@@ -36,15 +37,18 @@ namespace VisualizationWPF
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            GenerateData();
-            DrawBars();
+            //GenerateData();
+            //DrawBars();
 
-            // 🔁 SWITCH ALGORITHM HERE
-            //ISortAlgorithm algorithm = new QuickSort(this);
-            //ISortAlgorithm algorithm = new MergeSort(this);
-            ISortAlgorithm algorithm = new HeapSort(this);
+            //// 🔁 SWITCH ALGORITHM HERE
+            ////ISortAlgorithm algorithm = new QuickSort(this);
+            ////ISortAlgorithm algorithm = new MergeSort(this);
+            //ISortAlgorithm algorithm = new HeapSort(this);
 
-            await algorithm.Sort(data);
+            //await algorithm.Sort(data);
+
+            NeonMazeDijkstra maze = new NeonMazeDijkstra(this);
+            await maze.Run();
         }
 
         void GenerateData()
@@ -138,6 +142,31 @@ namespace VisualizationWPF
             outputDevice?.Dispose();
             audioFile?.Dispose();
             base.OnClosed(e);
+        }
+        public void PlayClick()
+        {
+            if (audioFile == null || outputDevice == null)
+                return;
+
+            audioFile.Position = 0;
+            outputDevice.Play();
+        }
+        public void UpdateVisited(int value)
+        {
+            if (VisitedText != null)
+                VisitedText.Text = value.ToString();
+        }
+
+        public void UpdateDistance(int value)
+        {
+            if (DistanceText != null)
+                DistanceText.Text = value.ToString();
+        }
+
+        public void UpdateStatus(string text)
+        {
+            if (StatusText != null)
+                StatusText.Text = text;
         }
     }
 }
