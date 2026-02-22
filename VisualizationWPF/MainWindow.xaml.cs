@@ -20,15 +20,19 @@ namespace VisualizationWPF
         public int[] data;
         public List<Rectangle> bars = new();
 
-        MediaPlayer player = new MediaPlayer();
+        // 🔊 NAudio fields
+        private WaveOutEvent outputDevice;
+        private AudioFileReader audioFile;
 
         public MainWindow()
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
 
-            player.Open(new Uri("click.wav", UriKind.Relative));
-            player.Volume = 1.0;
+            // 🔊 Initialize NAudio
+            audioFile = new AudioFileReader("click.wav");
+            outputDevice = new WaveOutEvent();
+            outputDevice.Init(audioFile);
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -101,6 +105,7 @@ namespace VisualizationWPF
         public void UpdateBar(int i)
         {
             bars[i].Height = data[i] * 8;
+            PlaySound();
         }
 
         public void Highlight(int i, int j)
@@ -120,11 +125,23 @@ namespace VisualizationWPF
             bars[i].Fill = color;
         }
 
+        // 🔊 Low-latency sound playback
         void PlaySound()
         {
-            player.Stop();
-            player.Position = TimeSpan.Zero;
-            player.Play();
+            if (audioFile == null || outputDevice == null)
+                return;
+
+            audioFile.Position = 0;   // rewind instantly
+            outputDevice.Play();
+        }
+
+        // Clean up audio on close
+        protected override void OnClosed(EventArgs e)
+        {
+            outputDevice?.Stop();
+            outputDevice?.Dispose();
+            audioFile?.Dispose();
+            base.OnClosed(e);
         }
         public void PlayClick()
         {

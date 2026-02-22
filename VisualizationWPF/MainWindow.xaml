@@ -11,7 +11,13 @@
 
     <Grid>
         <StackPanel VerticalAlignment="Top" Margin="0,30,0,0">
-            <TextBlock Text="Best Case: O(n log n)"
+            <TextBlock Text="HEAP SORT"
+                       Foreground="White"
+                       FontSize="36"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+            
+            <TextBlock Text="Time Complexity: O(n log n)"
                        Foreground="Lime"
                        FontSize="18"
                        HorizontalAlignment="Center"/>
